@@ -1,5 +1,6 @@
 const express = require('express');
 const feedRouter = require('./routes/feed');
+const authRouter = require('./routes/auth');
 const bodyParse = require('body-parser');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
@@ -43,11 +44,13 @@ app.use('/images', express.static('images'));
 
 
 app.use('/feed', feedRouter);
+app.use('/auth', authRouter);
 
 app.use((error, req, res, next) => {
     const status = error.statusCode || 500;
     const msg = error.message;
-    res.status(status).json({ message: msg });
+    const data = error.data
+    res.status(status).json({ message: msg, data: data });
 })
 
 mongoose.connect(MONGO_URI)
